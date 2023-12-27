@@ -11,4 +11,6 @@ public interface IContactService
     bool UpdateContactInList(string email, IContact updatedContact);
 
     bool RemoveContactFromList(string email);
+
+    bool CheckIfEmailExists(string email);
 }

@@ -130,4 +130,13 @@ public class ContactService : IContactService
             return false;
         }
     }
+
+    public bool CheckIfEmailExists(string email)
+    {
+        var existingContact = GetContactFromList(email);
+        if (existingContact != null)
+            return true;
+        else
+            return false;
+    }
 }
