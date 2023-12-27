@@ -19,4 +19,19 @@ public class FileService_Tests
         // Assert
         Assert.True(result);
     }
+
+    [Fact]
+    public void SaveToFileShould_ReturnFalse_IfFilePathDoesNotExist()
+    {
+        // Arrange
+        IFileService fileService = new FileService();
+        string filePath = @$"c:\{Guid.NewGuid()}\test.text";
+        string content = "Test content";
+
+        // Act
+        bool result = fileService.SaveContentToFile(filePath, content);
+
+        // Assert
+        Assert.False(result);
+    }
 }
