@@ -16,6 +16,16 @@ public class ContactService : IContactService
         _contactList = GetAllContactsFromList().ToList();
     }
 
+    private void SaveContactsToFile()
+    {
+        var jsonContent = JsonConvert.SerializeObject(_contactList, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Objects,
+        });
+
+        _fileService.SaveContentToFile(_filePath, jsonContent);
+    }
+
     public bool AddContactToList(IContact contact)
     {
         try
@@ -33,17 +43,7 @@ public class ContactService : IContactService
         return false;
     }
 
-    private void SaveContactsToFile()
-    {
-        var jsonContent = JsonConvert.SerializeObject(_contactList, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Objects,
-        });
-
-        _fileService.SaveContentToFile(_filePath, jsonContent);
-    }
-
-    // Hämta json-informationen och få in den till min lista
+    // Hämta json-informationen och få in den i listan
     public IEnumerable<IContact> GetAllContactsFromList()
     {
         try
@@ -67,6 +67,7 @@ public class ContactService : IContactService
             return null!;
         }
     }
+
     public IContact GetContactFromList(string email)
     {
         try
@@ -108,7 +109,7 @@ public class ContactService : IContactService
         }
     }
 
-    public bool UpdateContactInList(string email, IContact updatedContact)
+    public bool UpdateContactInList(string email, IContact contact)
     {
         try
         {
@@ -118,7 +119,7 @@ public class ContactService : IContactService
             {
                 _contactList.Remove(existingContact);
 
-                AddContactToList(updatedContact);
+                AddContactToList(contact);
 
                 return true;
             }

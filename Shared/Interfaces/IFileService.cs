@@ -3,17 +3,21 @@
 public interface IFileService
 {
     /// <summary>
-    /// Save content to a specified filepath.
+    /// Saves the provided content to a file at the specified file path.
     /// </summary>
-    /// <param name="filePath">enter the filepath with extension (eg. c:\projects\myfile.json)</param>
-    /// <param name="content">enter your content as a string</param>
-    /// <returns>returns true if saved, else false if failed</returns>
+    /// <param name="filePath">The path of the file to save the content to with extension (eg. c:\projects\myfile.json).</param>
+    /// <param name="content">The content to be saved to the file as a string.</param>
+    /// <returns>
+    ///   <c>true</c> if the content is saved to the file; otherwise, <c>false</c>.
+    /// </returns>
     bool SaveContentToFile(string filePath, string content);
 
     /// <summary>
-    /// Get content as string from a specified filepath
+    /// Retrieves the content of a file as a string from the specified file path.
     /// </summary>
-    /// <param name="filePath">enter the filepath with extension (eg. c:\projects\myfile.json)</param>
-    /// <returns>returns file content as string if file exists, else returns null</returns>
+    /// <param name="filePath">The path of the file to retrieve content from with extension (eg. c:\projects\myfile.json).</param>
+    /// <returns>
+    ///   The content of the file as a string, or <c>null</c> if the file does not exist or an error occurs.
+    /// </returns>
     string GetContentFromFile(string filePath);
 }
