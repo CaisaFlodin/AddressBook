@@ -10,7 +10,7 @@ public class FileService_Tests
     {
         // Arrange
         IFileService fileService = new FileService();
-        string filePath = @"c:\Projects\test.text";
+        string filePath = @"c:\Projects\AddressBook\test.text";
         string content = "Test content";
 
         // Act
