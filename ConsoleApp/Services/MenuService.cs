@@ -3,6 +3,14 @@ using Shared.Services;
 
 namespace ConsoleApp.Services;
 
+/// <summary>
+/// Service for managing contacts through a console menu.
+/// </summary>
+/// <remarks>
+/// This class provides options to add, view, delete, and display details of contacts
+/// through a console menu. It interacts with the ContactService to perform contact operations.
+/// </remarks>
+
 public class MenuService
 {
     private readonly ContactService _contactService;

@@ -19,6 +19,11 @@ public class ContactService : IContactService
 
     public event EventHandler? ContactsUpdated;
 
+    /// <summary>
+    /// Serializes the contact list to JSON format and saves it to a file.
+    /// Returns true if the save operation is successful; otherwise, returns false.
+    /// </summary>
+    /// <returns>True if contacts are successfully saved to a file; otherwise, false.</returns>
     private bool SaveContactsToFile()
     {
         var jsonContent = JsonConvert.SerializeObject(_contactList, new JsonSerializerSettings
