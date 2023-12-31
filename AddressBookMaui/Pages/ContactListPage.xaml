@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AddressBookMaui.Pages.ContactListPage"
+             
+             xmlns:viewmodels="clr-namespace:AddressBookMaui.ViewModels"
+             xmlns:models="clr-namespace:Shared.Models;assembly=Shared"
+             x:DataType="{x:Type viewmodels:ContactListViewModel}"
+             
+             Title="Contacts"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="auto,*, auto" Margin="20">
+
+        <Label 
+            Text="Contacts"
+            FontSize="30"
+            FontAttributes="Bold"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            Margin="0,0,0,20"
+            Grid.Row="0"/>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Contacts}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Contact">
+                    <Frame BackgroundColor="Transparent" BorderColor="Transparent" Padding="10"  Margin="0">
+                        <Grid ColumnDefinitions="*, auto">
+
+                            <Grid ColumnDefinitions="auto, auto" Grid.Column="0">
+                                <VerticalStackLayout>
+                                    <HorizontalStackLayout>
+                                <Label Grid.Column="0" Text="{Binding FirstName}" VerticalTextAlignment="Center" Margin="0,0,10,0"/>
+                                <Label Grid.Column="1" Text="{Binding LastName}" VerticalTextAlignment="Center"/>
+                                    </HorizontalStackLayout>
+                                    <Label TextColor="Gray" Text="{Binding Email}"></Label>
+                                </VerticalStackLayout>
+                            </Grid>
+                            
+
+                            <HorizontalStackLayout Grid.Column="1">
+                                <Button Text="EDIT" CommandParameter="{Binding .}" Command="{Binding NavigateToEditCommand, Source={RelativeSource AncestorType={x:Type viewmodels:ContactListViewModel}}}" Margin="5"/>
+                                <Button Text="DELETE" CommandParameter="{Binding .}" Command="{Binding RemoveCommand, Source={RelativeSource AncestorType={x:Type viewmodels:ContactListViewModel}}}" Margin="5"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2" Text="Add Contact" Command="{Binding NavigateToAddCommand}"/>
+    </Grid>
+</ContentPage>

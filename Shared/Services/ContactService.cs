@@ -1,14 +1,15 @@
 ﻿using Newtonsoft.Json;
 using Shared.Interfaces;
+using Shared.Models;
 using System.Diagnostics;
 
 namespace Shared.Services;
 
 public class ContactService : IContactService
 {
-    private List<IContact> _contactList = [];
+    private List<Contact> _contactList = [];
     private readonly IFileService _fileService;
-    private readonly string _filePath = @"c:\Projects\contacts.json";
+    private readonly string _filePath = @"c:\Projects\AddressBook\contacts.json";
 
     public ContactService(IFileService fileService)
     {
@@ -16,59 +17,68 @@ public class ContactService : IContactService
         _contactList = GetAllContactsFromList().ToList();
     }
 
-    private void SaveContactsToFile()
+    public event EventHandler? ContactsUpdated;
+
+    private bool SaveContactsToFile()
     {
         var jsonContent = JsonConvert.SerializeObject(_contactList, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Objects,
         });
 
-        _fileService.SaveContentToFile(_filePath, jsonContent);
+        var ok = _fileService.SaveContentToFile(_filePath, jsonContent);
+        if (ok)
+            return true;
+        else
+            return false;
     }
 
-    public bool AddContactToList(IContact contact)
+    public bool AddContactToList(Contact contact)
     {
         try
         {
-            if (!_contactList.Any(x => x.Email == contact.Email))
+            if (!_contactList.Any(x => x.Email == contact.Email) && !string.IsNullOrEmpty(contact.Email))
             {
                 _contactList.Add(contact);
 
                 SaveContactsToFile();
 
+                ContactsUpdated?.Invoke(this, EventArgs.Empty);
                 return true;
             }
         }
-        catch (Exception ex) { Debug.WriteLine(ex.Message); }
+        catch (Exception ex) { Debug.WriteLine("ContactService - AddContactToList:: " + ex.Message); }
         return false;
     }
 
-    // Hämta json-informationen och få in den i listan
-    public IEnumerable<IContact> GetAllContactsFromList()
+    public IEnumerable<Contact> GetAllContactsFromList()
     {
         try
         {
             var jsonContent = _fileService.GetContentFromFile(_filePath);
             if (!string.IsNullOrEmpty(jsonContent))
             {
-                // Deserializera som en lista av typen IContact
-                _contactList = JsonConvert.DeserializeObject<List<IContact>>(jsonContent, new JsonSerializerSettings
+                // Deserializera som en lista av typen Contact
+                _contactList = JsonConvert.DeserializeObject<List<Contact>>(jsonContent, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.Objects,
                 })!;
 
+                return _contactList;
             }
-            return _contactList;
-
+            else
+            {
+                return Enumerable.Empty<Contact>();
+            }
         }
         catch (Exception ex)
         {
-            Debug.WriteLine(ex.Message);
+            Debug.WriteLine("ContactService - GetAllContactsFromList:: " + ex.Message);
             return null!;
         }
     }
 
-    public IContact GetContactFromList(string email)
+    public Contact GetContactFromList(string email)
     {
         try
         {
@@ -78,48 +88,49 @@ public class ContactService : IContactService
 
             return contact ??= null!;
         }
-        catch (Exception ex) { Debug.WriteLine(ex.Message); }
+        catch (Exception ex) { Debug.WriteLine("ContactService - GetContactFromList:: " + ex.Message); }
         return null!;
     }
 
-    public bool RemoveContactFromList(string email)
+    public bool RemoveContactFromList(Contact contact)
     {
         try
         {
-            if (!string.IsNullOrEmpty(email))
-            {
-                var contactToRemove = _contactList.FirstOrDefault(x => x.Email == email);
+            var existingContact = _contactList.FirstOrDefault(x => x.Email == contact.Email);
 
-                if (contactToRemove is not null)
-                {
-                    _contactList.Remove(contactToRemove);
-
-                    SaveContactsToFile();
-
-                    return true;
-                }
-            }
-
-            return false; // contact with the given email not found
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-            return false;
-        }
-    }
-
-    public bool UpdateContactInList(string email, IContact contact)
-    {
-        try
-        {
-            var existingContact = GetContactFromList(email);
-
-            if (existingContact != null)
+            if (existingContact is not null)
             {
                 _contactList.Remove(existingContact);
 
-                AddContactToList(contact);
+                SaveContactsToFile();
+               
+                ContactsUpdated?.Invoke(this, EventArgs.Empty);
+                return true;
+            }
+            else
+                return false;
+        }
+        catch (Exception ex) { Debug.WriteLine("ContactService - RemoveContactFromList:: " + ex.Message); }
+        return false;
+    }
+
+    public bool UpdateContactInList(Contact updatedContact)
+    {
+        try
+        {
+            var existingContact = _contactList.FirstOrDefault(x => x.Email == updatedContact.Email);
+
+            if (existingContact != null)
+            {
+                existingContact.FirstName = updatedContact.FirstName;
+                existingContact.LastName = updatedContact.LastName;
+                existingContact.Phone = updatedContact.Phone;
+                existingContact.Email = updatedContact.Email;
+                existingContact.Address = updatedContact.Address;
+
+                SaveContactsToFile();
+
+                ContactsUpdated?.Invoke(this, EventArgs.Empty);
 
                 return true;
             }
@@ -127,17 +138,8 @@ public class ContactService : IContactService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine(ex.Message);
+            Debug.WriteLine("ContactService - UpdateContactInList:: " + ex.Message);
             return false;
         }
-    }
-
-    public bool CheckIfEmailExists(string email)
-    {
-        var existingContact = GetContactFromList(email);
-        if (existingContact != null)
-            return true;
-        else
-            return false;
     }
 }

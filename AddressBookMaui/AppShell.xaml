@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="AddressBookMaui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:AddressBookMaui"
+    xmlns:pages="clr-namespace:AddressBookMaui.Pages"
+    Shell.FlyoutBehavior="Disabled"
+    Title="Address Book">
+
+    <ShellContent
+        Title="Contacts"
+        ContentTemplate="{DataTemplate pages:ContactListPage}"
+        Route="ContactListPage" />
+    <ShellContent
+        Title="Add Contact"
+        ContentTemplate="{DataTemplate pages:ContactAddPage}"
+        Route="ContactAddPage" />
+
+</Shell>

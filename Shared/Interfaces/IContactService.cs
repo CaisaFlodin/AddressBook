@@ -1,59 +1,40 @@
-﻿namespace Shared.Interfaces;
+﻿using Shared.Models;
+
+namespace Shared.Interfaces;
 
 public interface IContactService
 {
     /// <summary>
-    /// Adds a new contact to the contact list if a contact with the same email does not already exist.
+    /// Adds a contact to the contact list if email doesn´t already exist.
     /// </summary>
-    /// <param name="contact">An object implementing the IContact interface to be added to the contact list.</param>
-    /// <returns>
-    ///   <c>true</c> if the contact is successfully added; otherwise, <c>false</c>.
-    /// </returns>
-    bool AddContactToList(IContact contact);
+    /// <param name="contact">The contact to be added to the list.</param>
+    /// <returns>True if the contact is successfully added; otherwise, false.</returns>
+    bool AddContactToList(Contact contact);
 
     /// <summary>
-    /// Retrieves all contacts from the contact list by deserializing the content from a file.
+    /// Retrieves all contacts from a file and returns the list.
     /// </summary>
-    /// <returns>
-    ///   An IEnumerable<IContact> containing all contacts in the list, or <c>null</c> if an error occurs.
-    /// </returns>
-    IEnumerable<IContact> GetAllContactsFromList();
+    /// <returns>List of contacts or null.</returns>
+    IEnumerable<Contact> GetAllContactsFromList();
 
     /// <summary>
-    /// Retrieves a contact from the contact list based on the provided email address.
+    /// Retrieves a contact from the contact list based on the provided email.
     /// </summary>
-    /// <param name="email">The email address of the contact to retrieve.</param>
-    /// <returns>
-    ///   An IContact object representing the contact with the specified email, or <c>null</c> if not found or an error occurs.
-    /// </returns>
-    IContact GetContactFromList(string email);
+    /// <param name="email">The email of the contact to retrieve.</param>
+    /// <returns>The contact with the specified email or null.</returns>
+    Contact GetContactFromList(string email);
 
     /// <summary>
-    /// Updates a contact in the contact list with the provided email by removing the existing contact and adding a new one.
+    /// Updates an existing contact with the provided contact information.
     /// </summary>
-    /// <param name="email">The email of the contact to be updated.</param>
-    /// <param name="contact">An object implementing the IContact interface with the updated information.</param>
-    /// <returns>
-    ///   <c>true</c> if the contact is successfully updated; otherwise, <c>false</c>.
-    /// </returns>
-    bool UpdateContactInList(string email, IContact contact);
+    /// <param name="updatedContact">The contact with updated information.</param>
+    /// <returns>True if the contact is successfully updated; otherwise, false.</returns>
+    bool UpdateContactInList(Contact contact);
 
     /// <summary>
-    /// Removes a contact from the contact list based on the provided email address.
+    /// Removes a contact from the contact list.
     /// </summary>
-    /// <param name="email">The email address of the contact to be removed.</param>
-    /// <returns>
-    ///   <c>true</c> if the contact is successfully removed; otherwise, <c>false</c> if the email is null or empty,
-    ///   or if no contact with the specified email is found. 
-    /// </returns>
-    bool RemoveContactFromList(string email);
-
-    /// <summary>
-    /// Checks if a contact with the provided email address exists in the contact list.
-    /// </summary>
-    /// <param name="email">The email address to check for existence in the contact list.</param>
-    /// <returns>
-    ///   <c>true</c> if a contact with the specified email exists; otherwise, <c>false</c>.
-    /// </returns>
-    bool CheckIfEmailExists(string email);
+    /// <param name="contact">The contact to be removed.</param>
+    /// <returns>True if the contact is successfully removed; otherwise, false.</returns>
+    bool RemoveContactFromList(Contact contact);
 }

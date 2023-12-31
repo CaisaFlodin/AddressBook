@@ -13,9 +13,8 @@ namespace ConsoleApp
             var builder = Host.CreateDefaultBuilder().ConfigureServices(services =>
             {
                 services.AddSingleton<IFileService, FileService>();
-                services.AddSingleton<IContactService, ContactService>();
+                services.AddSingleton<ContactService>();
                 services.AddSingleton<MenuService>();
-                //services.AddSingleton<IMenuService, MenuService>();
             }).Build();
 
             builder.Start();

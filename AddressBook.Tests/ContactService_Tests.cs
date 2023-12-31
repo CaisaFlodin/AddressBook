@@ -12,15 +12,13 @@ public class ContactService_Tests
     public void AddContactToListShould_AddOneContactToContactList_ThenReturnTrue()
     {
         // Arrange
-        IContact contact = new Contact { FirstName = "Test", LastName = "Testsson", PhoneNumber = "0733477354", Email = "test@domain.com", Address = "Testvägen 6" };
+        Contact contact = new Contact { FirstName = "Test", LastName = "Testsson", Phone = "0733477354", Email = "test@domain.com", Address = "Testvägen 6" };
 
         var mockFileService = new Mock<IFileService>();
-        IContactService contactService = new ContactService(mockFileService.Object);
-
+        ContactService contactService = new ContactService(mockFileService.Object);
 
         // Act
         bool result = contactService.AddContactToList(contact);
-
 
         // Assert
         Assert.True(result);
@@ -30,7 +28,7 @@ public class ContactService_Tests
     public void GetAllContactsFromListShould_GetAllContactsInContactList_ThenReturnListOfContacts()
     {
         // Arrange
-        var contacts = new List<IContact> { new Contact { FirstName = "Test", LastName = "Testsson", PhoneNumber = "0733477354", Email = "test@domain.com", Address = "Testvägen 6" } };
+        var contacts = new List<Contact> { new Contact { FirstName = "Test", LastName = "Testsson", Phone = "0733477354", Email = "test@domain.com", Address = "Testvägen 6" } };
 
         string json = JsonConvert.SerializeObject(contacts, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects });
 
@@ -40,12 +38,12 @@ public class ContactService_Tests
         IContactService contactService = new ContactService(mockFileService.Object);
 
         // Act
-        IEnumerable<IContact> result = contactService.GetAllContactsFromList();
+        var result = contactService.GetAllContactsFromList();
 
         // Assert
         Assert.NotNull(result);
         Assert.True(result.Any());
-        IContact returned_contact = result.FirstOrDefault()!;
+        Contact returned_contact = result.FirstOrDefault()!;
         Assert.Equal("test@domain.com", returned_contact.Email);
     }
 }
